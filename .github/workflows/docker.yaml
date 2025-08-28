@@ -62,6 +62,8 @@ jobs:
     - name: Find and build Docker images
       run: |
         echo "开始构建 mydocker 目录下的 Docker 镜像"
+        echo "ALIYUN_REGISTRY: $ALIYUN_REGISTRY"
+        echo "ALIYUN_NAME_SPACE: $ALIYUN_NAME_SPACE"
         
         # 遍历 mydocker 目录下的所有子目录
         for dir in mydocker/*/; do
@@ -76,13 +78,14 @@ jobs:
               # 进入目录构建镜像
               cd "$dir"
               
-              # 构建镜像
-              echo "正在构建镜像: $ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$image_name:latest"
-              docker build -t $ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$image_name:latest .
+              # 构建镜像（确保格式正确）
+              full_image_name="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$image_name:latest"
+              echo "正在构建镜像: $full_image_name"
+              docker build -t $full_image_name .
               
               # 推送镜像
-              echo "正在推送镜像: $ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$image_name:latest"
-              docker push $ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$image_name:latest
+              echo "正在推送镜像: $full_image_name"
+              docker push $full_image_name
               
               echo "镜像 $image_name 构建并推送完成"
               echo "----------------------------------------"
