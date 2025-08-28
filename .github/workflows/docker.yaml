@@ -78,8 +78,12 @@ jobs:
               # 进入目录构建镜像
               cd "$dir"
               
-              # 构建镜像（确保格式正确）
-              full_image_name="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$image_name:latest"
+              # 构建镜像（处理命名空间为空的情况）
+              if [ -n "$ALIYUN_NAME_SPACE" ]; then
+                full_image_name="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$image_name:latest"
+              else
+                full_image_name="$ALIYUN_REGISTRY/$image_name:latest"
+              fi
               echo "正在构建镜像: $full_image_name"
               docker build -t $full_image_name .
               
